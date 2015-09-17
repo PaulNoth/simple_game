@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Test</title>
+    <script src="test.js"></script>
+    <link rel="stylesheet" href="test.css">
+</head>
+<body onkeydown="move(event)">
+
+    <div>
+        <button id="start" onclick="fillRect()">
+            Start
+        </button>
+        <button id="up" onclick="moveUp()" disabled="true">
+            Up
+        </button>
+        <button id="down" onclick="moveDown()" disabled="true">
+            Down
+        </button>
+        <button id="left" onclick="moveLeft()" disabled="true">
+            Left
+        </button>
+        <button id="right" onclick="moveRight()" disabled="true">
+            Right
+        </button>
+    </div>
+    <div>
+        <canvas id="canvas" width="500" height="500" >
+
+        </canvas>
+    </div>
+
+</body>
+</html>
