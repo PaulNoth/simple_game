@@ -1,90 +1,115 @@
 
 var x = 0;
 var y = 0;
-function fillRect()
+
+var randomBlockingElements = [];
+var started = false;
+
+function fillRect(x, y)
 {
     var ctx = document.getElementById("canvas").getContext("2d");
     ctx.save();
     ctx.fillStyle = "#aaaaaa";
     ctx.fillRect(x, y, 25, 25);
     ctx.restore();
-    enableButtons();
 }
 
-function enableButtons()
+function clearRect(x, y)
+{
+    var ctx = document.getElementById("canvas").getContext("2d");
+    ctx.clearRect(x, y, 25, 25);
+    ctx.restore();
+}
+
+function start()
+{
+    started = true;
+    enableButtons(true);
+    fillRect(x, y);
+}
+function end()
+{
+    started = false;
+    enableButtons(false);
+}
+
+function enableButtons(enabled)
 {
     var butUp = document.getElementById("up");
-    butUp.disabled = false;
+    butUp.disabled = !enabled;
     var butDown = document.getElementById("down");
-    butDown.disabled = false;
+    butDown.disabled = !enabled;
     var butLeft = document.getElementById("left");
-    butLeft.disabled = false;
+    butLeft.disabled = !enabled;
     var butRight = document.getElementById("right");
-    butRight.disabled = false;
+    butRight.disabled = !enabled;
 
-    var startButton = document.getElementById("start")
-    startButton.disabled = true;
+    var startButton = document.getElementById("start");
+    startButton.disabled = enabled;
+
+    var endButton = document.getElementById("end");
+    endButton.disabled = !enabled;
 }
 
 function moveUp()
 {
-    var ctx = document.getElementById("canvas").getContext("2d");
-    ctx.save();
-    ctx.clearRect(0, 0, 500, 500);
-    y += increment(true);
-    if (y < 0) {
-        y = 0;
+    if(started)
+    {
+        var newY = y + increment(true);
+        if(newY >= 0 && !collision(x, newY))
+        {
+            clearRect(x, y);
+            y = newY;
+        }
+        fillRect(x, y);
     }
-    ctx.fillStyle = "#aaaaaa";
-    ctx.fillRect(x, y, 25, 25);
-    ctx.restore();
 }
 
-function moveDown() {
-    var ctx = document.getElementById("canvas").getContext("2d");
-    ctx.save();
-    ctx.clearRect(0, 0, 500, 500);
-    y += increment(false);
-    if (y > 475) {
-        y = 475;
+function moveDown()
+{
+    if(started)
+    {
+        var newY = y + increment(false);
+        if(newY <= 475 && !collision(x, newY))
+        {
+            clearRect(x, y);
+            y = newY;
+        }
+        fillRect(x, y);
     }
-    ctx.fillStyle = "#aaaaaa";
-    ctx.fillRect(x, y, 25, 25);
-    ctx.restore();
 }
 
 function moveLeft()
 {
-    var ctx = document.getElementById("canvas").getContext("2d");
-    ctx.save();
-    ctx.clearRect(0, 0, 500, 500);
-    x += increment(true);
-    if (x < 0) {
-        x = 0;
+    if(started)
+    {
+        var newX = x + increment(true);
+        if(newX >= 0 && !collision(newX, y))
+        {
+            clearRect(x, y);
+            x = newX;
+        }
+        fillRect(x, y);
     }
-    ctx.fillStyle = "#aaaaaa";
-    ctx.fillRect(x, y, 25, 25);
-    ctx.restore();
 }
 
 function moveRight()
 {
-    var ctx = document.getElementById("canvas").getContext("2d");
-    ctx.save();
-    ctx.clearRect(0, 0, 500, 500);
-    x += increment(false);
-    if (x > 475) {
-        x = 475;
+    if(started)
+    {
+        var newX = x + increment(false);
+        if(newX <= 475 && !collision(newX, y))
+        {
+            clearRect(x, y);
+            x = newX;
+        }
+        fillRect(x, y);
     }
-    ctx.fillStyle = "#aaaaaa";
-    ctx.fillRect(x, y, 25, 25);
-    ctx.restore();
 }
 
 function move(event)
 {
     var key = event.keyCode;
-    console.log(key);
     if(key == 37)
     {
         moveLeft();
@@ -112,4 +137,35 @@ function increment(negative)
     {
         return 25;
     }
+}
+
+function randomRect()
+{
+    var ctx = document.getElementById("canvas").getContext("2d");
+    ctx.save();
+    ctx.fillStyle = "#ff00ff";
+    var randomX = (Math.random() * 20); // 20 == canvas size / rectangle size
+    var randomY = (Math.random() * 20);
+    randomX = Math.floor(randomX) * 25;
+    randomY = Math.floor(randomY) * 25;
+    randomBlockingElements.push({x: randomX, y: randomY});
+    ctx.fillRect(randomX, randomY , 25, 25);
+    ctx.restore();
+}
+
+function collision(xCoor, yCoor)
+{
+    for(var i = 0; i < randomBlockingElements.length; i++) {
+        if (xCoor === randomBlockingElements[i].x && yCoor === randomBlockingElements[i].y)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+function moveTo(event)
+{
+    console.log(event.x);
+    console.log(event.y);
 }

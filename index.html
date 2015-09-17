@@ -9,24 +9,30 @@
 <body onkeydown="move(event)">
 
     <div>
-        <button id="start" onclick="fillRect()">
+        <button id="start" onclick="start()">
             Start
         </button>
-        <button id="up" onclick="moveUp()" disabled="true">
+        <button id="random" onclick="randomRect()">
+            Random
+        </button>
+        <button id="end" onclick="end()" disabled>
+            End
+        </button>
+        <button id="up" onclick="moveUp()" disabled>
             Up
         </button>
-        <button id="down" onclick="moveDown()" disabled="true">
+        <button id="down" onclick="moveDown()" disabled>
             Down
         </button>
-        <button id="left" onclick="moveLeft()" disabled="true">
+        <button id="left" onclick="moveLeft()" disabled>
             Left
         </button>
-        <button id="right" onclick="moveRight()" disabled="true">
+        <button id="right" onclick="moveRight()" disabled>
             Right
         </button>
     </div>
     <div>
-        <canvas id="canvas" width="500" height="500" >
+        <canvas id="canvas" width="500" height="500" onclick="moveTo(event)">
 
         </canvas>
     </div>
