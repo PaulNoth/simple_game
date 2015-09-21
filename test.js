@@ -107,24 +107,104 @@ function moveRight()
     }
 }
 
+function moveUpLeft()
+{
+    if(started)
+    {
+        var newX = x + increment(true);
+        var newY = y + increment(true);
+        if(newX >= 0 && newY >= 0 && !collision(newX, newY))
+        {
+            clearRect(x, y);
+            x = newX;
+            y = newY;
+        }
+        fillRect(x, y);
+    }
+}
+
+function moveUpRight()
+{
+    if(started)
+    {
+        var newX = x + increment(false);
+        var newY = y + increment(true);
+        if(newX <= 475 && newY >= 0 && !collision(newX, newY))
+        {
+            clearRect(x, y);
+            x = newX;
+            y = newY;
+        }
+        fillRect(x, y);
+    }
+}
+
+function moveDownLeft()
+{
+    if(started)
+    {
+        var newX = x + increment(true);
+        var newY = y + increment(false);
+        if(newX >= 0 && newY <= 475 && !collision(newX, newY))
+        {
+            clearRect(x, y);
+            x = newX;
+            y = newY;
+        }
+        fillRect(x, y);
+    }
+}
+
+function moveDownRight()
+{
+    if(started)
+    {
+        var newX = x + increment(false);
+        var newY = y + increment(false);
+        if(newX <= 475 && newY <= 475 && !collision(newX, newY))
+        {
+            clearRect(x, y);
+            x = newX;
+            y = newY;
+        }
+        fillRect(x, y);
+    }
+}
+
 function move(event)
 {
     var key = event.keyCode;
-    if(key == 37)
+    if(key === 37)          //left arrow
     {
         moveLeft();
     }
-    else if(key == 38)
+    else if(key === 38)     //up arrow
     {
         moveUp()
     }
-    else if(key == 39)
+    else if(key === 39)     //right arrow
     {
         moveRight();
     }
-    else if(key == 40)
+    else if(key === 40)     //down arrow
     {
         moveDown();
+    }
+    else if(key === 33)     // page up
+    {
+        moveUpRight();
+    }
+    else if(key === 34)     // page down
+    {
+        moveDownRight();
+    }
+    else if(key === 35)     // end
+    {
+        moveDownLeft();
+    }
+    else if(key === 36)     // home
+    {
+        moveUpLeft();
     }
 }
 
