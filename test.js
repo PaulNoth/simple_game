@@ -298,56 +298,56 @@ function moveTo(event)
             }
 
             var up = new Node(moveUp(that.rectangle), that);
-            if(up.rectangle !== null && visited[up.hashcode()] === undefined && !collision(up.rectangle.x, up.rectangle.y))
+            if(up.rectangle !== null && !visited[up.hashcode()] && !collision(up.rectangle.x, up.rectangle.y))
             {
                 visited[up.hashcode()] = up;
                 pq.queue(up);
             }
 
             var down = new Node(moveDown(that.rectangle), that);
-            if(down.rectangle !== null && visited[down.hashcode()] === undefined && !collision(down.rectangle.x, down.rectangle.y))
+            if(down.rectangle !== null && !visited[down.hashcode()] && !collision(down.rectangle.x, down.rectangle.y))
             {
                 visited[down.hashcode()] = down;
                 pq.queue(down);
             }
 
             var left = new Node(moveLeft(that.rectangle), that);
-            if(left.rectangle !== null && visited[left.hashcode()] === undefined && !collision(left.rectangle.x, left.rectangle.y))
+            if(left.rectangle !== null && !visited[left.hashcode()] && !collision(left.rectangle.x, left.rectangle.y))
             {
                 visited[left.hashcode()] = left;
                 pq.queue(left);
             }
 
             var right = new Node(moveRight(that.rectangle), that);
-            if(right.rectangle !== null && visited[right.hashcode()] === undefined && !collision(right.rectangle.x, right.rectangle.y))
+            if(right.rectangle !== null && !visited[right.hashcode()] && !collision(right.rectangle.x, right.rectangle.y))
             {
                 visited[right.hashcode()] = right;
                 pq.queue(right);
             }
 
             var upLeft = new Node(moveUpLeft(that.rectangle), that);
-            if(upLeft.rectangle !== null && visited[upLeft.hashcode()] === undefined && !collision(upLeft.rectangle.x, upLeft.rectangle.y))
+            if(upLeft.rectangle !== null && !visited[upLeft.hashcode()] && !collision(upLeft.rectangle.x, upLeft.rectangle.y))
             {
                 visited[upLeft.hashcode()] = upLeft;
                 pq.queue(upLeft);
             }
 
             var upRight = new Node(moveUpRight(that.rectangle), that);
-            if(upRight.rectangle !== null && visited[upRight.hashcode()] === undefined && !collision(upRight.rectangle.x, upRight.rectangle.y))
+            if(upRight.rectangle !== null && !visited[upRight.hashcode()] && !collision(upRight.rectangle.x, upRight.rectangle.y))
             {
                 visited[upRight.hashcode()] = upRight;
                 pq.queue(upRight);
             }
 
             var downLeft = new Node(moveDownLeft(that.rectangle), that);
-            if(downLeft.rectangle !== null && visited[downLeft.hashcode()] === undefined && !collision(downLeft.rectangle.x, downLeft.rectangle.y))
+            if(downLeft.rectangle !== null && !visited[downLeft.hashcode()] && !collision(downLeft.rectangle.x, downLeft.rectangle.y))
             {
                 visited[downLeft.hashcode()] = downLeft;
                 pq.queue(downLeft);
             }
 
             var downRight = new Node(moveDownRight(that.rectangle), that);
-            if(downRight.rectangle !== null && visited[downRight.hashcode()] === undefined && !collision(downRight.rectangle.x, downRight.rectangle.y))
+            if(downRight.rectangle !== null && !visited[downRight.hashcode()] && !collision(downRight.rectangle.x, downRight.rectangle.y))
             {
                 visited[downRight.hashcode()] = downRight;
                 pq.queue(downRight);
