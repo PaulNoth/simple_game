@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/PaulNoth/simple_game#readme",
   "devDependencies": {
-    "js-priority-queue": "^0.1.2"
+    "js-priority-queue": "^0.1.2",
+    "underscore": "^1.8.3"
   }
 }

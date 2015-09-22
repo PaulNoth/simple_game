@@ -4,9 +4,18 @@
     <meta charset="UTF-8">
     <title>Game Test</title>
     <script src="test.js"></script>
+    <script src="node_modules/js-priority-queue/priority-queue.js"></script>
+    <script src="node_modules/underscore/underscore.js.js"></script>
     <link rel="stylesheet" href="test.css">
 </head>
 <body onkeydown="move(event)">
+
+
+    <div>
+        <canvas id="canvas" width="500" height="500" onclick="moveTo(event)">
+
+        </canvas>
+    </div>
 
     <div>
         <button id="start" onclick="start()">
@@ -30,11 +39,6 @@
         <button id="right" onclick="moveRight()" disabled>
             Right
         </button>
-    </div>
-    <div>
-        <canvas id="canvas" width="500" height="500" onclick="moveTo(event)">
-
-        </canvas>
     </div>
 
 </body>
