@@ -1,0 +1,22 @@
+{
+  "name": "game",
+  "version": "0.0.1",
+  "description": "playsing with javascript",
+  "main": "index.html",
+  "scripts": {
+    "test": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaulNoth/simple_game.git"
+  },
+  "author": "Pavol Pidanič",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PaulNoth/simple_game/issues"
+  },
+  "homepage": "https://github.com/PaulNoth/simple_game#readme",
+  "devDependencies": {
+    "js-priority-queue": "^0.1.2"
+  }
+}
