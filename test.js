@@ -13,13 +13,21 @@ function Rectangle(x, y)
 
     this.hashcode = function()
     {
-        return (this.x * this.y).toString();
+        var result = 17;
+        result = 31 * result + x;
+        result = 31 * result + y;
+        return result.toString();
+    };
+
+    this.equals = function(other)
+    {
+        return _.isEqual(this, other);
     }
 }
 
 function fillRect(x, y)
 {
-    var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx = getCanvas().getContext("2d");
     ctx.save();
     ctx.fillStyle = "#aaaaaa";
     ctx.fillRect(x, y, 25, 25);
@@ -28,7 +36,7 @@ function fillRect(x, y)
 
 function clearRect(x, y)
 {
-    var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx = getCanvas().getContext("2d");
     ctx.clearRect(x, y, 25, 25);
     ctx.restore();
 }
@@ -215,7 +223,7 @@ function increment(negative)
 
 function randomRect()
 {
-    var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx = getCanvas().getContext("2d");
     ctx.save();
     ctx.fillStyle = "#ff00ff";
     var randomX = (Math.random() * 20); // 20 == canvas size / rectangle size
@@ -265,8 +273,9 @@ function moveTo(event)
 
     if(started)
     {
-                var endX = Math.floor(event.x / 25) * 25;
-        var endY = Math.floor(event.y / 25) * 25;
+        var endX = Math.floor((event.x - getCanvas().offsetLeft) / 25) * 25;
+        var endY = Math.floor((event.y - getCanvas().offsetTop) / 25) * 25;
+
         var pq = new PriorityQueue({comparator: function(node1, node2) {
             return euclideanDist(node1) - euclideanDist(node2)}
         });
@@ -289,70 +298,88 @@ function moveTo(event)
             }
 
             var up = new Node(moveUp(that.rectangle), that);
-            if(up.rectangle !== null && visited[up.hashcode()] !== null && !collision(up.rectangle.x, up.rectangle.y))
+            if(up.rectangle !== null && visited[up.hashcode()] === undefined && !collision(up.rectangle.x, up.rectangle.y))
             {
                 visited[up.hashcode()] = up;
                 pq.queue(up);
             }
 
             var down = new Node(moveDown(that.rectangle), that);
-            if(down.rectangle !== null && visited[down.hashcode()] !== null && !collision(down.rectangle.x, down.rectangle.y))
+            if(down.rectangle !== null && visited[down.hashcode()] === undefined && !collision(down.rectangle.x, down.rectangle.y))
             {
                 visited[down.hashcode()] = down;
                 pq.queue(down);
             }
 
             var left = new Node(moveLeft(that.rectangle), that);
-            if(left.rectangle !== null && visited[left.hashcode()] !== null && !collision(left.rectangle.x, left.rectangle.y))
+            if(left.rectangle !== null && visited[left.hashcode()] === undefined && !collision(left.rectangle.x, left.rectangle.y))
             {
                 visited[left.hashcode()] = left;
                 pq.queue(left);
             }
 
             var right = new Node(moveRight(that.rectangle), that);
-            if(right.rectangle !== null && visited[right.hashcode()] !== null && !collision(right.rectangle.x, right.rectangle.y))
+            if(right.rectangle !== null && visited[right.hashcode()] === undefined && !collision(right.rectangle.x, right.rectangle.y))
             {
                 visited[right.hashcode()] = right;
                 pq.queue(right);
             }
 
             var upLeft = new Node(moveUpLeft(that.rectangle), that);
-            if(upLeft.rectangle !== null && visited[upLeft.hashcode()] !== null && !collision(upLeft.rectangle.x, upLeft.rectangle.y))
+            if(upLeft.rectangle !== null && visited[upLeft.hashcode()] === undefined && !collision(upLeft.rectangle.x, upLeft.rectangle.y))
             {
                 visited[upLeft.hashcode()] = upLeft;
                 pq.queue(upLeft);
             }
 
             var upRight = new Node(moveUpRight(that.rectangle), that);
-            if(upRight.rectangle !== null && visited[upRight.hashcode()] !== null && !collision(upRight.rectangle.x, upRight.rectangle.y))
+            if(upRight.rectangle !== null && visited[upRight.hashcode()] === undefined && !collision(upRight.rectangle.x, upRight.rectangle.y))
             {
                 visited[upRight.hashcode()] = upRight;
                 pq.queue(upRight);
             }
 
             var downLeft = new Node(moveDownLeft(that.rectangle), that);
-            if(downLeft.rectangle !== null && visited[downLeft.hashcode()] !== null && !collision(downLeft.rectangle.x, downLeft.rectangle.y))
+            if(downLeft.rectangle !== null && visited[downLeft.hashcode()] === undefined && !collision(downLeft.rectangle.x, downLeft.rectangle.y))
             {
                 visited[downLeft.hashcode()] = downLeft;
                 pq.queue(downLeft);
             }
 
             var downRight = new Node(moveDownRight(that.rectangle), that);
-            if(downRight.rectangle !== null && visited[downRight.hashcode()] !== null && !collision(downRight.rectangle.x, downRight.rectangle.y))
+            if(downRight.rectangle !== null && visited[downRight.hashcode()] === undefined && !collision(downRight.rectangle.x, downRight.rectangle.y))
             {
                 visited[downRight.hashcode()] = downRight;
                 pq.queue(downRight);
             }
         }
 
+        var path = [];
         if(found != null)
         {
             var node = found;
             while(node != null)
             {
-                console.log(node);
+                path.push(node.rectangle);
                 node = node.previous;
             }
         }
+        if(path.length > 0)
+        {
+
+            path.reverse();
+
+            console.log(path.length - 1 + " moves");
+            // excludes start frame from path
+            for (var i = 1; i < path.length; i++)
+            {
+                redrawRectangle(path[i]);
+            }
+        }
     }
+}
+
+function getCanvas()
+{
+    return document.getElementById("canvas");
 }
