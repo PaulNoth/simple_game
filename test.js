@@ -1,6 +1,6 @@
 
-var x = 0;
-var y = 0;
+var actualX = 0;
+var actualY = 0;
 
 var randomBlockingElements = [];
 var started = false;
@@ -25,7 +25,7 @@ function start()
 {
     started = true;
     enableButtons(true);
-    fillRect(x, y);
+    fillRect(actualX, actualY);
 }
 function end()
 {
@@ -53,158 +53,141 @@ function enableButtons(enabled)
 
 function moveUp()
 {
-    if(started)
+    var newX = actualX;
+    var newY = actualY + increment(true);
+    if(newY >= 0 && !collision(actualX, newY))
     {
-        var newY = y + increment(true);
-        if(newY >= 0 && !collision(x, newY))
-        {
-            clearRect(x, y);
-            y = newY;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
     }
+    return null;
 }
 
 function moveDown()
 {
-    if(started)
+    var newX = actualX;
+    var newY = actualY + increment(false);
+    if(newY <= 475 && !collision(actualX, newY))
     {
-        var newY = y + increment(false);
-        if(newY <= 475 && !collision(x, newY))
-        {
-            clearRect(x, y);
-            y = newY;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
     }
+    return null;
 }
 
 function moveLeft()
 {
-    if(started)
+    var newX = actualX + increment(true);
+    var newY = actualY;
+    if(newX >= 0 && !collision(newX, actualY))
     {
-        var newX = x + increment(true);
-        if(newX >= 0 && !collision(newX, y))
-        {
-            clearRect(x, y);
-            x = newX;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
     }
+    return null;
 }
 
 function moveRight()
 {
-    if(started)
+    var newX = actualX + increment(false);
+    var newY = actualY;
+    if(newX <= 475 && !collision(newX, actualY))
     {
-        var newX = x + increment(false);
-        if(newX <= 475 && !collision(newX, y))
-        {
-            clearRect(x, y);
-            x = newX;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
     }
+    return null;
 }
 
 function moveUpLeft()
 {
-    if(started)
+    var newX = actualX + increment(true);
+    var newY = actualY + increment(true);
+    if(newX >= 0 && newY >= 0 && !collision(newX, newY))
     {
-        var newX = x + increment(true);
-        var newY = y + increment(true);
-        if(newX >= 0 && newY >= 0 && !collision(newX, newY))
-        {
-            clearRect(x, y);
-            x = newX;
-            y = newY;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
     }
+    return null;
 }
 
 function moveUpRight()
 {
-    if(started)
+    var newX = actualX + increment(false);
+    var newY = actualY + increment(true);
+    if(newX <= 475 && newY >= 0 && !collision(newX, newY))
     {
-        var newX = x + increment(false);
-        var newY = y + increment(true);
-        if(newX <= 475 && newY >= 0 && !collision(newX, newY))
-        {
-            clearRect(x, y);
-            x = newX;
-            y = newY;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
     }
+    return null;
 }
 
 function moveDownLeft()
 {
-    if(started)
+    var newX = actualX + increment(true);
+    var newY = actualY + increment(false);
+    if(newX >= 0 && newY <= 475 && !collision(newX, newY))
     {
-        var newX = x + increment(true);
-        var newY = y + increment(false);
-        if(newX >= 0 && newY <= 475 && !collision(newX, newY))
-        {
-            clearRect(x, y);
-            x = newX;
-            y = newY;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
     }
+    return null;
 }
 
 function moveDownRight()
 {
-    if(started)
+    var newX = actualX + increment(false);
+    var newY = actualY + increment(false);
+    if(newX <= 475 && newY <= 475 && !collision(newX, newY))
     {
-        var newX = x + increment(false);
-        var newY = y + increment(false);
-        if(newX <= 475 && newY <= 475 && !collision(newX, newY))
-        {
-            clearRect(x, y);
-            x = newX;
-            y = newY;
-        }
-        fillRect(x, y);
+        return {x: newX, y: newY}
+    }
+    return null;
+}
+
+function redrawRectangle(rectangle)
+{
+    if(rectangle !== null)
+    {
+        clearRect(actualX, actualY);
+        actualX = rectangle.x;
+        actualY = rectangle.y;
+        fillRect(actualX, actualY);
     }
 }
 
 function move(event)
 {
-    var key = event.keyCode;
-    if(key === 37)          //left arrow
+    if(started)
     {
-        moveLeft();
-    }
-    else if(key === 38)     //up arrow
-    {
-        moveUp()
-    }
-    else if(key === 39)     //right arrow
-    {
-        moveRight();
-    }
-    else if(key === 40)     //down arrow
-    {
-        moveDown();
-    }
-    else if(key === 33)     // page up
-    {
-        moveUpRight();
-    }
-    else if(key === 34)     // page down
-    {
-        moveDownRight();
-    }
-    else if(key === 35)     // end
-    {
-        moveDownLeft();
-    }
-    else if(key === 36)     // home
-    {
-        moveUpLeft();
+        var key = event.keyCode;
+        if(key === 37)          //left arrow
+        {
+            redrawRectangle(moveLeft());
+        }
+        else if(key === 38)     //up arrow
+        {
+            redrawRectangle(moveUp());
+        }
+        else if(key === 39)     //right arrow
+        {
+            redrawRectangle(moveRight());
+        }
+        else if(key === 40)     //down arrow
+        {
+            redrawRectangle(moveDown());
+        }
+        else if(key === 33)     // page up
+        {
+            redrawRectangle(moveUpRight());
+        }
+        else if(key === 34)     // page down
+        {
+            redrawRectangle(moveDownRight());
+        }
+        else if(key === 35)     // end
+        {
+            //moveDownLeft();
+            redrawRectangle(moveDownLeft());
+        }
+        else if(key === 36)     // home
+        {
+            redrawRectangle(moveUpLeft());
+        }
     }
 }
 
@@ -228,7 +211,10 @@ function randomRect()
     var randomY = (Math.random() * 20);
     randomX = Math.floor(randomX) * 25;
     randomY = Math.floor(randomY) * 25;
-    randomBlockingElements.push({x: randomX, y: randomY});
+    if(!started || (actualX != randomX && actualY != randomY))
+    {
+        randomBlockingElements.push({x: randomX, y: randomY});
+    }
     ctx.fillRect(randomX, randomY , 25, 25);
     ctx.restore();
 }
@@ -246,6 +232,6 @@ function collision(xCoor, yCoor)
 
 function moveTo(event)
 {
-    console.log(event.x);
-    console.log(event.y);
+    var endX = Math.floor(event.x / 25) * 25;
+    var endY = Math.floor(event.y / 25) * 25;
 }
