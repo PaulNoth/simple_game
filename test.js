@@ -17,11 +17,6 @@ function Rectangle(x, y)
     }
 }
 
-function Node()
-{
-
-}
-
 function fillRect(x, y)
 {
     var ctx = document.getElementById("canvas").getContext("2d");
@@ -68,54 +63,54 @@ function enableButtons(enabled)
     endButton.disabled = !enabled;
 }
 
-function moveUp()
+function moveUp(rect)
 {
-    var newX = actualX;
-    var newY = actualY + increment(true);
-    if(newY >= 0 && !collision(actualX, newY))
+    var newX = rect.x;
+    var newY = rect.y + increment(true);
+    if(newY >= 0 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
     }
     return null;
 }
 
-function moveDown()
+function moveDown(rect)
 {
-    var newX = actualX;
-    var newY = actualY + increment(false);
-    if(newY <= 475 && !collision(actualX, newY))
+    var newX = rect.x;
+    var newY = rect.y + increment(false);
+    if(newY <= 475 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
     }
     return null;
 }
 
-function moveLeft()
+function moveLeft(rect)
 {
-    var newX = actualX + increment(true);
-    var newY = actualY;
-    if(newX >= 0 && !collision(newX, actualY))
+    var newX = rect.x + increment(true);
+    var newY = rect.y;
+    if(newX >= 0 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
     }
     return null;
 }
 
-function moveRight()
+function moveRight(rect)
 {
-    var newX = actualX + increment(false);
-    var newY = actualY;
-    if(newX <= 475 && !collision(newX, actualY))
+    var newX = rect.x + increment(false);
+    var newY = rect.y;
+    if(newX <= 475 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
     }
     return null;
 }
 
-function moveUpLeft()
+function moveUpLeft(rect)
 {
-    var newX = actualX + increment(true);
-    var newY = actualY + increment(true);
+    var newX = rect.x + increment(true);
+    var newY = rect.y + increment(true);
     if(newX >= 0 && newY >= 0 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
@@ -123,10 +118,10 @@ function moveUpLeft()
     return null;
 }
 
-function moveUpRight()
+function moveUpRight(rect)
 {
-    var newX = actualX + increment(false);
-    var newY = actualY + increment(true);
+    var newX = rect.x + increment(false);
+    var newY = rect.y + increment(true);
     if(newX <= 475 && newY >= 0 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
@@ -134,10 +129,10 @@ function moveUpRight()
     return null;
 }
 
-function moveDownLeft()
+function moveDownLeft(rect)
 {
-    var newX = actualX + increment(true);
-    var newY = actualY + increment(false);
+    var newX = rect.x + increment(true);
+    var newY = rect.y + increment(false);
     if(newX >= 0 && newY <= 475 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
@@ -145,10 +140,10 @@ function moveDownLeft()
     return null;
 }
 
-function moveDownRight()
+function moveDownRight(rect)
 {
-    var newX = actualX + increment(false);
-    var newY = actualY + increment(false);
+    var newX = rect.x + increment(false);
+    var newY = rect.y + increment(false);
     if(newX <= 475 && newY <= 475 && !collision(newX, newY))
     {
         return new Rectangle(newX, newY);
@@ -174,36 +169,35 @@ function move(event)
         var key = event.keyCode;
         if(key === 37)          //left arrow
         {
-            redrawRectangle(moveLeft());
+            redrawRectangle(moveLeft({x: actualX, y: actualY}));
         }
         else if(key === 38)     //up arrow
         {
-            redrawRectangle(moveUp());
+            redrawRectangle(moveUp({x: actualX, y: actualY}));
         }
         else if(key === 39)     //right arrow
         {
-            redrawRectangle(moveRight());
+            redrawRectangle(moveRight({x: actualX, y: actualY}));
         }
         else if(key === 40)     //down arrow
         {
-            redrawRectangle(moveDown());
+            redrawRectangle(moveDown({x: actualX, y: actualY}));
         }
         else if(key === 33)     // page up
         {
-            redrawRectangle(moveUpRight());
+            redrawRectangle(moveUpRight({x: actualX, y: actualY}));
         }
         else if(key === 34)     // page down
         {
-            redrawRectangle(moveDownRight());
+            redrawRectangle(moveDownRight({x: actualX, y: actualY}));
         }
         else if(key === 35)     // end
         {
-            //moveDownLeft();
-            redrawRectangle(moveDownLeft());
+            redrawRectangle(moveDownLeft({x: actualX, y: actualY}));
         }
         else if(key === 36)     // home
         {
-            redrawRectangle(moveUpLeft());
+            redrawRectangle(moveUpLeft({x: actualX, y: actualY}));
         }
     }
 }
@@ -249,19 +243,116 @@ function collision(xCoor, yCoor)
 
 function moveTo(event)
 {
-    var endX = Math.floor(event.x / 25) * 25;
-    var endY = Math.floor(event.y / 25) * 25;
-    var pq = new PriorityQueue({comparator: function(rect1, rect2) {
-        return euclideanDist(rect1) - euclideanDist(rect2)}
-    });
-    var visited = {};
+    function Node(rect, previous)
+    {
+        this.rectangle = rect;
+        this.previous = previous;
 
-    var actual = new Rectangle(actualX, actualY);
-    visited[actual.hashcode()] = actual;
+        this.hashcode = function()
+        {
+            if(rect !== null)
+            {
+                return rect.hashcode();
+            }
+            return "";
+        }
+    }
 
-}
+    function euclideanDist(node)
+    {
+        return Math.floor(Math.sqrt(Math.pow(actualX - node.rectangle.x, 2) + Math.pow(actualY - node.rectangle.y, 2)));
+    }
 
-function euclideanDist(rectangle)
-{
-    return Math.floor(Math.sqrt(Math.pow(actualX - rectangle.x, 2) + Math.pow(actualY - rectangle.y, 2)));
+    if(started)
+    {
+                var endX = Math.floor(event.x / 25) * 25;
+        var endY = Math.floor(event.y / 25) * 25;
+        var pq = new PriorityQueue({comparator: function(node1, node2) {
+            return euclideanDist(node1) - euclideanDist(node2)}
+        });
+
+        // A*
+        var visited = {};
+        var actual = new Node(new Rectangle(actualX, actualY), null);
+        visited[actual.hashcode()] = actual;
+        pq.queue(actual);
+
+
+        var found = null;
+        while(pq.length > 0)
+        {
+            var that = pq.dequeue();
+            if(that.rectangle.x === endX && that.rectangle.y === endY)
+            {
+                found = that;
+                break;
+            }
+
+            var up = new Node(moveUp(that.rectangle), that);
+            if(up.rectangle !== null && visited[up.hashcode()] !== null && !collision(up.rectangle.x, up.rectangle.y))
+            {
+                visited[up.hashcode()] = up;
+                pq.queue(up);
+            }
+
+            var down = new Node(moveDown(that.rectangle), that);
+            if(down.rectangle !== null && visited[down.hashcode()] !== null && !collision(down.rectangle.x, down.rectangle.y))
+            {
+                visited[down.hashcode()] = down;
+                pq.queue(down);
+            }
+
+            var left = new Node(moveLeft(that.rectangle), that);
+            if(left.rectangle !== null && visited[left.hashcode()] !== null && !collision(left.rectangle.x, left.rectangle.y))
+            {
+                visited[left.hashcode()] = left;
+                pq.queue(left);
+            }
+
+            var right = new Node(moveRight(that.rectangle), that);
+            if(right.rectangle !== null && visited[right.hashcode()] !== null && !collision(right.rectangle.x, right.rectangle.y))
+            {
+                visited[right.hashcode()] = right;
+                pq.queue(right);
+            }
+
+            var upLeft = new Node(moveUpLeft(that.rectangle), that);
+            if(upLeft.rectangle !== null && visited[upLeft.hashcode()] !== null && !collision(upLeft.rectangle.x, upLeft.rectangle.y))
+            {
+                visited[upLeft.hashcode()] = upLeft;
+                pq.queue(upLeft);
+            }
+
+            var upRight = new Node(moveUpRight(that.rectangle), that);
+            if(upRight.rectangle !== null && visited[upRight.hashcode()] !== null && !collision(upRight.rectangle.x, upRight.rectangle.y))
+            {
+                visited[upRight.hashcode()] = upRight;
+                pq.queue(upRight);
+            }
+
+            var downLeft = new Node(moveDownLeft(that.rectangle), that);
+            if(downLeft.rectangle !== null && visited[downLeft.hashcode()] !== null && !collision(downLeft.rectangle.x, downLeft.rectangle.y))
+            {
+                visited[downLeft.hashcode()] = downLeft;
+                pq.queue(downLeft);
+            }
+
+            var downRight = new Node(moveDownRight(that.rectangle), that);
+            if(downRight.rectangle !== null && visited[downRight.hashcode()] !== null && !collision(downRight.rectangle.x, downRight.rectangle.y))
+            {
+                visited[downRight.hashcode()] = downRight;
+                pq.queue(downRight);
+            }
+        }
+
+        if(found != null)
+        {
+            var node = found;
+            while(node != null)
+            {
+                console.log(node);
+                node = node.previous;
+            }
+        }
+    }
 }
