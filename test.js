@@ -5,6 +5,23 @@ var actualY = 0;
 var randomBlockingElements = [];
 var started = false;
 
+
+function Rectangle(x, y)
+{
+    this.x = x;
+    this.y = y;
+
+    this.hashcode = function()
+    {
+        return (this.x * this.y).toString();
+    }
+}
+
+function Node()
+{
+
+}
+
 function fillRect(x, y)
 {
     var ctx = document.getElementById("canvas").getContext("2d");
@@ -57,7 +74,7 @@ function moveUp()
     var newY = actualY + increment(true);
     if(newY >= 0 && !collision(actualX, newY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -68,7 +85,7 @@ function moveDown()
     var newY = actualY + increment(false);
     if(newY <= 475 && !collision(actualX, newY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -79,7 +96,7 @@ function moveLeft()
     var newY = actualY;
     if(newX >= 0 && !collision(newX, actualY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -90,7 +107,7 @@ function moveRight()
     var newY = actualY;
     if(newX <= 475 && !collision(newX, actualY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -101,7 +118,7 @@ function moveUpLeft()
     var newY = actualY + increment(true);
     if(newX >= 0 && newY >= 0 && !collision(newX, newY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -112,7 +129,7 @@ function moveUpRight()
     var newY = actualY + increment(true);
     if(newX <= 475 && newY >= 0 && !collision(newX, newY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -123,7 +140,7 @@ function moveDownLeft()
     var newY = actualY + increment(false);
     if(newX >= 0 && newY <= 475 && !collision(newX, newY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -134,7 +151,7 @@ function moveDownRight()
     var newY = actualY + increment(false);
     if(newX <= 475 && newY <= 475 && !collision(newX, newY))
     {
-        return {x: newX, y: newY}
+        return new Rectangle(newX, newY);
     }
     return null;
 }
@@ -213,7 +230,7 @@ function randomRect()
     randomY = Math.floor(randomY) * 25;
     if(!started || (actualX != randomX && actualY != randomY))
     {
-        randomBlockingElements.push({x: randomX, y: randomY});
+        randomBlockingElements.push(new Rectangle(randomX, randomY));
     }
     ctx.fillRect(randomX, randomY , 25, 25);
     ctx.restore();
@@ -234,4 +251,17 @@ function moveTo(event)
 {
     var endX = Math.floor(event.x / 25) * 25;
     var endY = Math.floor(event.y / 25) * 25;
+    var pq = new PriorityQueue({comparator: function(rect1, rect2) {
+        return euclideanDist(rect1) - euclideanDist(rect2)}
+    });
+    var visited = {};
+
+    var actual = new Rectangle(actualX, actualY);
+    visited[actual.hashcode()] = actual;
+
+}
+
+function euclideanDist(rectangle)
+{
+    return Math.floor(Math.sqrt(Math.pow(actualX - rectangle.x, 2) + Math.pow(actualY - rectangle.y, 2)));
 }
