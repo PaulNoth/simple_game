@@ -5,25 +5,7 @@ var actualY = 0;
 var randomBlockingElements = [];
 var started = false;
 
-
-function Rectangle(x, y)
-{
-    this.x = x;
-    this.y = y;
-
-    this.hashcode = function()
-    {
-        var result = 17;
-        result = 31 * result + x;
-        result = 31 * result + y;
-        return result.toString();
-    };
-
-    this.equals = function(other)
-    {
-        return _.isEqual(this, other);
-    }
-}
+canvasConstants.CANVAS_SIZE;
 
 function fillRect(x, y)
 {
