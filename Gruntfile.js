@@ -10,8 +10,7 @@ module.exports = function(grunt) {
       },
       serve: {
           options: {
-              port: 8080,
-              output: 'index.html'
+              port: 8080
           }
       }
   });
